@@ -1,0 +1,35 @@
+version: "3.8"
+
+services: 
+  cart: 
+    container_name: cart 
+    image: bernicesmu/cart:1.0
+    build: ./cart
+    command: go run cart.go 
+    restart: always 
+    ports: 
+      - 8000:8000
+
+  item: 
+    container_name: item 
+    image: bernicesmu/item:1.0
+    build: ./item
+    command: go run item.go 
+    restart: always 
+    ports: 
+      - 8001:8001
+
+  calculate: 
+    container_name: calculate 
+    image: bernicesmu/calculate:1.0
+    build: ./calculate
+    command: go run calculate.go 
+    restart: always 
+    environment:
+      cartURL: "http://cart:8000/"
+      itemURL: "http://item:8001/"
+    ports: 
+      - 8002:8002 
+    depends_on:
+      - cart
+      - item 
